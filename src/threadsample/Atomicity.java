@@ -13,7 +13,6 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class Atomicity extends Thread {
     static volatile int i;
-    //static volatile ReentrantLock lock = new ReentrantLock();
     static Object lock = new Object();
     boolean b;
 
@@ -24,20 +23,11 @@ public class Atomicity extends Thread {
                	 synchronized(lock) {	
                         i++;
                	 }
-//                    }finally{
-//                    	lock.unlock();
-//                    }
                 } else {
                   
-//                     try{
-//                    	 lock.lock();
                  synchronized(lock){
                 		i--;
                   }  	
-//                     }finally{
-//                    	lock.unlock(); 
-//                     }
-                  //}
                 }
             
         }
@@ -46,14 +36,9 @@ public class Atomicity extends Thread {
     public static void main(String[] args) throws InterruptedException {
         new Atomicity().start();
         new Atomicity().start();
-       // new Atomicity().start();
+
 
         while (true){
-         
-        	int val;
-//        	synchronized (lock) {
-//        		val = i;
-//			}
             System.out.println(i);
             Thread.sleep(500);
         }

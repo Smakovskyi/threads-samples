@@ -1,35 +1,37 @@
-package threadsample;
+package threadsample.improved;
+import threadsample.Atomicity;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.OptionalDouble;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
 
 public class AtomicityReentrantLock extends Thread {
 	
 		static volatile int i;
-		ReentrantLock lock = new ReentrantLock();
+
 
 
 	    public void run() {
 			boolean b=false;
-
+			final LockDecorator lock = new LockDecorator();
 			while (true) {
 	                if (b = !b) {
-	                	lock.lock();
-	                     try {
+
+	                     try(LockDecorator l = lock.lock()) {
 	                	 	i++;
-	                     }finally {
-	                    	 lock.unlock();
-	                     }
-	                } else {
-	                  
-	                	lock.lock();
-	                		i--;
-	                	lock.unlock();	
+	                     } catch (Exception e) {
+							 e.printStackTrace();
+						 }
+					} else {
+
+						try(LockDecorator l = lock.lock()) {
+							i--;
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 
 	                }
 	            
